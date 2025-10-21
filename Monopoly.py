@@ -1,3 +1,4 @@
+from typing_extensions import Text
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 from random import randint
@@ -25,6 +26,9 @@ cells = []
 cell_count = len(cell_names)  # 36
 side_cells = cell_count // 4  # 9
 size = 40                    # длина стороны поля
+
+
+
 
 # --- Генерация клеток по периметру ---
 for i in range(cell_count):
@@ -77,6 +81,8 @@ for i in range(cell_count):
     )
 
 
+
+# Текст с координатами камеры
 camera_text = Text(
     text='',
     origin=( -0.5, 0.5),   # выравнивание относительно угла
@@ -96,6 +102,8 @@ steps = 0
 
 # --- UI ---
 info_text = Text(text="Нажми [SPACE], чтобы бросить кубик", position=(-0.7, 0.45), scale=1.5)
+
+popup = WindowPanel(title='Всплывающее окно', content=[Text('                           ', position =(0,0))], enabled=False)
 
 # --- Бросок кубика ---
 def input(key):
@@ -119,7 +127,11 @@ def input(key):
     if key == 'left mouse up':
         mouse.locked = False
         mouse.visible = True
-              
+    if key == 'escape':
+        popup.enabled = False
+
+#Окно при остановке на клетке
+
 
 # --- Логика движения ---
 def update():
@@ -131,8 +143,7 @@ def update():
         camera.rotation_y += mouse.velocity[0] * mouse_sensitivity.x
         camera.rotation_x -= mouse.velocity[1] * mouse_sensitivity.y
         camera.rotation_x = clamp(camera.rotation_x, 0, 100)
-    if moving:
-        
+    if moving:        
         target_pos = cells[target_index].position + Vec3(0, 0.6, 0)
         player.position = lerp(player.position, target_pos, time.dt * 3)
         camera.position = (player.position.x, 50, player.position.z)
@@ -142,6 +153,9 @@ def update():
             current_index = target_index
             moving = False
             print(f"Игрок встал на: {cells[current_index].name}")
+            popup.content[0].text = cells[current_index].name
+            popup.enabled = True
+            
     # Движение камеры на WASD
     speed = 15 * time.dt        
     direction = Vec3(
@@ -154,14 +168,6 @@ def update():
     camera.position += direction * time.dt * speed
     camera.position += camera.up * direction.z * speed
     camera.position += camera.right * direction.x * speed
-
-
-
-
-
-
-
-        
 
 # --- Камера сверху ---
 camera.position = (0,220,0)
