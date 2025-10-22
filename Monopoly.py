@@ -1,6 +1,5 @@
 from typing_extensions import Text
 from ursina import *
-from ursina.prefabs.first_person_controller import FirstPersonController
 from random import randint
 from math import sin, cos, radians
 
@@ -54,7 +53,7 @@ for i in range(cell_count):
     )
     box.name = cell_names[i]
     cells.append(box)
-    
+    # Функция переноса текста внутри клеток
     def wrap_text(text, max_chars=30):
         words = text.split(' ')
         lines = []
@@ -93,6 +92,17 @@ camera_text = Text(
 
 # --- Игрок ---
 player = Entity(model='sphere', color=color.red, scale=0.8, position=cells[0].position + Vec3(0, 0.6, 0))
+
+#Background
+background = Entity(
+    model = 'quad',
+    texture = 'textures/background.png',
+    scale = (43,43),
+    x = 3,
+    z = -3,
+
+    rotation_x = 90
+)
 
 # --- Переменные игры ---
 current_index = 0
@@ -168,9 +178,13 @@ def update():
     camera.position += direction * time.dt * speed
     camera.position += camera.up * direction.z * speed
     camera.position += camera.right * direction.x * speed
+    camera.x = clamp(camera.x,-50,50)
+    camera.y = clamp(camera.y,1,500)
+    camera.z = clamp(camera.z,-30,30)
 
 # --- Камера сверху ---
 camera.position = (0,220,0)
+
 """ camera.position = (player.position.x, 50, player.position.z) """
 camera.rotation_x = 90
 """ camera.orthographic = False """
