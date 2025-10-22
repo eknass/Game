@@ -27,8 +27,6 @@ side_cells = cell_count // 4  # 9
 size = 40                    # длина стороны поля
 
 
-
-
 # --- Генерация клеток по периметру ---
 for i in range(cell_count):
     if i < side_cells:  # нижняя сторона (слева -> направо)
@@ -79,15 +77,13 @@ for i in range(cell_count):
         origin=(0, 0)
     )
 
-
-
 # Текст с координатами камеры
 camera_text = Text(
     text='',
     origin=( -0.5, 0.5),   # выравнивание относительно угла
     scale=1,
     x=-0.85,               # положение по X (левый край)
-    y=0.45,                # положение по Y (верхний край)
+    y=0.5,                # положение по Y (верхний край)
     color=color.yellow)
 
 # --- Игрок ---
@@ -113,6 +109,7 @@ steps = 0
 # --- UI ---
 info_text = Text(text="Нажми [SPACE], чтобы бросить кубик", position=(-0.7, 0.45), scale=1.5)
 
+#Окно при остановке на клетке
 popup = WindowPanel(title='Всплывающее окно', content=[Text('                           ', position =(0,0))], enabled=False)
 
 # --- Бросок кубика ---
@@ -139,9 +136,6 @@ def input(key):
         mouse.visible = True
     if key == 'escape':
         popup.enabled = False
-
-#Окно при остановке на клетке
-
 
 # --- Логика движения ---
 def update():
